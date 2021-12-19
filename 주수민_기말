@@ -1,0 +1,40 @@
+library(rpart)
+library(randomForest)
+library(e1071)
+library(class)
+library(caret)
+
+ucla = read.csv("https://stats.idre.ucla.edu/stat/data/binary.csv")
+str(ucla)
+ucla$rank = factor(ucla$rank)
+
+train <- ucla[1 : 240,]
+test <- ucla[241 : 400,]
+
+
+r = rpart(rank~., data = train)
+rF5 = randomForest(rank~., data = train, ntree = 50)
+rF10 = randomForest(rank~., data = train, ntree = 1000)
+s = svm(rank~., data = train)
+sp = svm(rank~., data = train, kernel = 'polynomial')
+k = knn(train[, 1:4], test, train$rank, k = 3)
+
+rp = predict(r, newdata = test, type = 'class')
+rF5p = predict(rF5, newdata = test, type = 'class')
+rF10p = predict(rF10, newdata = test, type = 'class')
+sp = predict(s, newdata = test, type = 'class' )
+spp = predict(sp, newdata = test, type = 'class' )
+
+table(rp, test$rank)
+table(rF5p, test$rank)
+table(rF10p, test$rank)
+table(sp, test$rank)
+table(spp, test$rank)
+table(k, test$rank)
+
+confusionMatrix(rp, test$rank)
+confusionMatrix(rF5p, test$rank)
+confusionMatrix(rF10p, test$rank)
+confusionMatrix(sp, test$rank)
+confusionMatrix(spp, test$rank)
+confusionMatrix(k, test$rank)
