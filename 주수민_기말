@@ -1,13 +1,16 @@
+# 모델 적용을 위한 library
 library(rpart)
 library(randomForest)
 library(e1071)
 library(class)
 library(caret)
 
+# ucla데이터 read.csv파일을 활용하여 불러오기
 ucla = read.csv("https://stats.idre.ucla.edu/stat/data/binary.csv")
 str(ucla)
 ucla$rank = factor(ucla$rank)
 
+#데이터 비율 설정
 train <- ucla[1 : 240,]
 test <- ucla[241 : 400,]
 
